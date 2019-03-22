@@ -1,10 +1,13 @@
 const _ = require('lodash');
 const { EventEmitter } = require('events');
 
+const Wallet = require('../Wallet/Wallet');
 const { WALLET_TYPES } = require('../CONSTANTS');
 const { is } = require('../utils/index');
 const EVENTS = require('../EVENTS');
-const { simpleTransactionOptimizedAccumulator } = require('../utils/coinSelections/strategies');
+const {
+  simpleTransactionOptimizedAccumulator
+} = require('../utils/coinSelections/strategies');
 
 const defaultOptions = {
   network: 'testnet',
@@ -12,7 +15,7 @@ const defaultOptions = {
   allowSensitiveOperations: false,
   plugins: [],
   injectDefaultPlugins: true,
-  strategy: simpleTransactionOptimizedAccumulator,
+  strategy: simpleTransactionOptimizedAccumulator
 };
 
 /* eslint-disable no-underscore-dangle */
@@ -71,30 +74,42 @@ class Account {
       getUTXOS,
       injectPlugin,
       sign,
-      updateNetwork,
+      updateNetwork
     });
-    if (!wallet || wallet.constructor.name !== 'Wallet') throw new Error('Expected wallet to be passed as param');
-    if (!_.has(wallet, 'walletId')) throw new Error('Missing walletID to create an account');
+    if (!(wallet instanceof Wallet)) {
+      throw new Error('Expected wallet to be passed as param');
+    }
+    if (!_.has(wallet, 'walletId')) {
+      throw new Error('Missing walletID to create an account');
+    }
     this.walletId = wallet.walletId;
-
     this.events = new EventEmitter();
     this.isReady = false;
-    this.injectDefaultPlugins = _.has(opts, 'injectDefaultPlugins') ? opts.injectDefaultPlugins : defaultOptions.injectDefaultPlugins;
-    this.allowSensitiveOperations = _.has(opts, 'allowSensitiveOperations') ? opts.allowSensitiveOperations : defaultOptions.allowSensitiveOperations;
+    this.injectDefaultPlugins = _.has(opts, 'injectDefaultPlugins')
+      ? opts.injectDefaultPlugins
+      : defaultOptions.injectDefaultPlugins;
+    this.allowSensitiveOperations = _.has(opts, 'allowSensitiveOperations')
+      ? opts.allowSensitiveOperations
+      : defaultOptions.allowSensitiveOperations;
 
     this.type = wallet.type;
     this.offlineMode = wallet.offlineMode;
 
-    const accountIndex = _.has(opts, 'accountIndex') ? opts.accountIndex : wallet.accounts.length;
+    const accountIndex = _.has(opts, 'accountIndex')
+      ? opts.accountIndex
+      : wallet.accounts.length;
     this.accountIndex = accountIndex;
-    this.strategy = _loadStrategy(_.has(opts, 'strategy') ? opts.strategy : defaultOptions.strategy);
+    this.strategy = _loadStrategy(
+      _.has(opts, 'strategy') ? opts.strategy : defaultOptions.strategy
+    );
     this.network = getNetwork(wallet.network.toString());
 
     this.BIP44PATH = getBIP44Path(this.network, accountIndex);
 
     this.transactions = {};
 
-    this.label = (opts && opts.label && is.string(opts.label)) ? opts.label : null;
+    this.label =
+      opts && opts.label && is.string(opts.label) ? opts.label : null;
 
     // If transport is null or invalid, we won't try to fetch anything
     this.transport = wallet.transport;
@@ -103,29 +118,35 @@ class Account {
     this.storage = wallet.storage;
 
     if (this.type === WALLET_TYPES.HDWALLET) {
-      this.storage.importAccounts({
-        label: this.label,
-        path: this.BIP44PATH,
-        network: this.network,
-      }, this.walletId);
+      this.storage.importAccounts(
+        {
+          label: this.label,
+          path: this.BIP44PATH,
+          network: this.network
+        },
+        this.walletId
+      );
     }
     if (this.type === WALLET_TYPES.SINGLE_ADDRESS) {
-      this.storage.importSingleAddress({
-        label: this.label,
-        path: '0',
-        network: this.network,
-      }, this.walletId);
+      this.storage.importSingleAddress(
+        {
+          label: this.label,
+          path: '0',
+          network: this.network
+        },
+        this.walletId
+      );
     }
 
     this.keyChain = wallet.keyChain;
 
-    this.cacheTx = (opts.cacheTx) ? opts.cacheTx : defaultOptions.cacheTx;
+    this.cacheTx = opts.cacheTx ? opts.cacheTx : defaultOptions.cacheTx;
 
     this.plugins = {
       workers: {},
       daps: {},
       standard: {},
-      watchers: {},
+      watchers: {}
     };
 
     // Handle import of cache
