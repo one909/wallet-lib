@@ -1,7 +1,6 @@
 const _ = require('lodash');
 const { EventEmitter } = require('events');
 
-const Wallet = require('../Wallet/Wallet');
 const { WALLET_TYPES } = require('../CONSTANTS');
 const { is } = require('../utils/index');
 const EVENTS = require('../EVENTS');
@@ -76,13 +75,12 @@ class Account {
       sign,
       updateNetwork
     });
-    if (!(wallet instanceof Wallet)) {
-      throw new Error('Expected wallet to be passed as param');
-    }
-    if (!_.has(wallet, 'walletId')) {
+    if (!wallet) throw new Error('Expected wallet to be passed as param');
+    if (!_.has(wallet, 'walletId'))
       throw new Error('Missing walletID to create an account');
-    }
+
     this.walletId = wallet.walletId;
+
     this.events = new EventEmitter();
     this.isReady = false;
     this.injectDefaultPlugins = _.has(opts, 'injectDefaultPlugins')
