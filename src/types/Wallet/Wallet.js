@@ -120,5 +120,6 @@ Wallet.prototype.getAccount = require('./methods/getAccount');
 Wallet.prototype.generateNewWalletId = generateNewWalletId;
 Wallet.prototype.updateNetwork = require('./methods/updateNetwork');
 Wallet.prototype.exportWallet = require('./methods/exportWallet');
+Wallet.sweepPaperWallet = require('./methods/sweepPaperWallet');
 
 module.exports = Wallet;

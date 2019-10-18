@@ -18,7 +18,7 @@ export declare class Wallet {
     generateNewWalletId():void;
     getAccount(accOptions?: Wallet.getAccOptions): Account;
     updateNetwork(network:Network):boolean;
-
+    static sweepPaperWallet():string;
 }
 
 export declare namespace Wallet {
@@ -36,4 +36,3 @@ export declare namespace Wallet {
         index?:number;
     }
 }
-

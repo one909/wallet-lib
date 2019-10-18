@@ -1,7 +1,14 @@
 ## Wallet
 
-In Wallet-Lib, a Wallet is a manager that is tied to a passphrase/seed or privateKey and manage one or multiples accounts from that. 
-It's purpose is mainly to create or get an account, allowing multiple account to be tracked and tied from a single manager.  
+In Wallet-Lib, a Wallet is a manager that is tied to a passphrase/seed or privateKey and manage one or multiples accounts from that.
+It's purpose is mainly to create or get an account, allowing multiple account to be tracked and tied from a single manager.
+
+### Sweep paper wallet
+
+```js
+const Wallet = require('@dashevo/wallet-lib');
+const privateKey = Wallet.sweepPaperWallet();
+```
 
 ### Create a wallet
 
@@ -26,7 +33,7 @@ const Wallet = new Wallet(opts);
 ```
 ##### options
 
-> **allowSensitiveOperations** : Bool(def: false) : When set at true, allow plugins to access storage or sensible information. 
+> **allowSensitiveOperations** : Bool(def: false) : When set at true, allow plugins to access storage or sensible information.
 
 > **injectDefaultPlugins** : Bool(def: true) : When set at false, disable default plugins (SyncWorker, ChainWorker, BIP44Worker)
 
@@ -84,7 +91,7 @@ const mnemonic = wallet.exportWallet();
 ```
 ##### params
 
-> **toHDPrivateKey** : Bool(def : false) 
+> **toHDPrivateKey** : Bool(def : false)
 
 ---
 
