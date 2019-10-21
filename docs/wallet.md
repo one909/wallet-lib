@@ -7,7 +7,7 @@ It's purpose is mainly to create or get an account, allowing multiple account to
 
 ```js
 const Wallet = require('@dashevo/wallet-lib');
-const privateKey = Wallet.sweepPaperWallet();
+const privateKey = Wallet.sweepPaperWallet(privateKey);
 ```
 
 ### Create a wallet
